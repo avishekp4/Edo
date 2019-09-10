@@ -1,10 +1,15 @@
+/*Includes*/
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <termios.h>
 #include <unistd.h>
+#include <errno.h>
 
+/*Data*/
 struct termios orig_termios_setting;
+
+/*terminal*/
 
 void killP(const char* error) {
     perror(error);
@@ -37,12 +42,14 @@ void enableRawMode() {
     }
 }
 
+/*Intit section*/
+
 int main() {
     enableRawMode();
 
     while (1) {
         char c = '\0';
-        read(STDIN_FILENO, &c, 1);
+        if(read(STDIN_FILENO, &c, 1) == -1 && errno != EAGAIN) killP("Read");
         if(iscntrl(c)){
             printf("%d \r\n",c);
         }
