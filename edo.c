@@ -17,6 +17,9 @@ struct termios orig_termios_setting;
 /*terminal*/
 
 void killP(const char* error) {
+    write(STDOUT_FILENO, "\x1b[2J", 4);
+    write(STDOUT_FILENO, "\x1b[H", 3);
+
     perror(error);
     exit(1);
 }
@@ -68,6 +71,9 @@ void processKeyPress() {
     switch (c)
     {
     case (CTRL_KEY('q')):
+        write(STDOUT_FILENO, "\x1b[2J", 4);
+        write(STDOUT_FILENO, "\x1b[H", 3);
+        
         exit(0);
         break;
     
