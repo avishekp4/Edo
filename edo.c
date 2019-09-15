@@ -60,9 +60,21 @@ char readKeyPress(){
     return c;
 }
 /*Output*/
+
+void editorRows(){
+    int rows;
+    for(rows = 0; rows<24; rows++)
+    {
+        write( STDOUT_FILENO, "~\r\n",3);
+    }
+}
+
 void clearScreen()
 {
     write(STDOUT_FILENO, "\x1b[2J", 4);
+    write(STDOUT_FILENO, "\x1b[H", 3);
+    editorRows();
+    
     write(STDOUT_FILENO, "\x1b[H", 3);
 }
 /*Input*/
@@ -73,7 +85,7 @@ void processKeyPress() {
     case (CTRL_KEY('q')):
         write(STDOUT_FILENO, "\x1b[2J", 4);
         write(STDOUT_FILENO, "\x1b[H", 3);
-        
+
         exit(0);
         break;
     
