@@ -56,6 +56,11 @@ char readKeyPress(){
     }
     return c;
 }
+/*Output*/
+void clearScreen()
+{
+    write(STDOUT_FILENO, "\x1b[2J", 4);
+}
 /*Input*/
 void processKeyPress() {
     char c = readKeyPress();
@@ -86,6 +91,7 @@ int main() {
         // if(c == CTRL_KEY('q')) {
         //     break;
         // }
+        clearScreen();
         processKeyPress();
     }
     return 0;
