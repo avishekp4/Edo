@@ -11,9 +11,10 @@
 #define CTRL_KEY(k) ((k) & 0x1f)
 
 /*Data*/
-
-struct termios orig_termios_setting;
-
+struct editorConfig {
+    struct termios orig_termios_setting;
+};
+struct editorConfig E;
 /*terminal*/
 
 void killP(const char* error) {
@@ -25,20 +26,19 @@ void killP(const char* error) {
 }
 
 void diableRawMode() {
-    if( tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios_setting) == -1 ) {
+    if( tcsetattr(STDIN_FILENO, TCSAFLUSH, &E.orig_termios_setting) == -1 ) {
         killP("tcsetattr");
     }
 }
 
 void enableRawMode() {
-    atexit(diableRawMode);
-    struct termios raw;
-
-    if( tcgetattr(STDIN_FILENO, &raw) == -1 ) {
+    if( tcgetattr(STDIN_FILENO, &E.orig_termios_setting) == -1 ) {
         killP("tcgetattr");
     }
-
-    orig_termios_setting = raw;
+    atexit(diableRawMode);
+    
+    struct termios raw;
+    raw = E.orig_termios_setting;
     raw.c_iflag &= ~(ICRNL| IXON | BRKINT | INPCK | ISTRIP);
     raw.c_oflag &= ~(OPOST);
     raw.c_cflag |= (CS8);
